@@ -1,4 +1,4 @@
-import cStringIO, struct
+import cStringIO, struct, sys
 
 TS_PACKET_SIZE = 188
 
@@ -44,7 +44,7 @@ class MpegTsFile:
 
         # while True:
         #     packet = self.read_packet()
-            
+
         #     if not packet:
         #         return ""
 
@@ -74,7 +74,7 @@ class TSPacket:
                        "adap_field": header >> 5 & 0x1,
                        "cont_payl": header >> 4 & 0x1,
                        "contin": header & 0xf}
-                       
+
         if self.header["adap_field"]:
             length = ord(fd.read(1))
             flags = ord(fd.read(1))
@@ -99,6 +99,9 @@ class Frame:
         self.is_keyframe = is_keyframe
         self.packet = packet
         self.duration = 0.0
+
+    def __str__(self):
+        return str(self.pos) + ":" + str(self.duration)
 
 def get_iframes(filename):
     fd = MpegTsFile(filename)
@@ -164,33 +167,3 @@ def get_iframes(filename):
             break
 
     return iframes
-
-
-from hls import Playlist
-
-def get_playlist(filenames):
-    playlist = Playlist()
-    playlist.append_tags({"EXT-X-VERSION": 4,
-                          "EXT-X-I-FRAMES-ONLY": None})
-
-    for filename in filenames:
-        for frame in get_iframes(filename):
-            playlist.append_tag("EXTINF", "%f," % frame.duration)
-            playlist.append_tag("EXT-X-BYTERANGE", "%d@%d" % (frame.size,
-                                                              frame.pos))
-            playlist.append(filename)
-
-    playlist.append_tag("EXT-X-ENDLIST")
-
-    return playlist
-
-def run():
-    playlist = get_playlist(["videoOnly0.ts", "mystream-000001.ts"])
-    playlist.write("iframe_index.m3u8")    
-
-
-run()
-
-#import cProfile
-
-#cProfile.run('run()')
