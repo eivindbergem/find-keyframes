@@ -103,12 +103,12 @@ class Frame:
     def __str__(self):
         return str(self.pos) + ":" + str(self.duration)
 
-def get_iframes(filename):
+def get_keyframes(filename):
     fd = MpegTsFile(filename)
 
     fd.find_sync()
 
-    iframes = []
+    keyframes = []
 
     last_keyframe = None
 
@@ -155,7 +155,7 @@ def get_iframes(filename):
 
                     if frame.is_keyframe:
                         last_keyframe = frame
-                        iframes.append(frame)
+                        keyframes.append(frame)
 
                 #if packet.pes_length:
                 #    fd.seek(packet.pes_length - (packet.pes_length %
@@ -166,4 +166,4 @@ def get_iframes(filename):
         else:
             break
 
-    return iframes
+    return keyframes
