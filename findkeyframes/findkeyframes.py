@@ -160,9 +160,8 @@ def get_keyframes(filename):
 
                     frame = Frame(pos, size, keyframe, packet)
 
-                    if frame.is_keyframe:
-                        last_keyframe = frame
-                        keyframes.append(frame)
+                    last_keyframe = frame
+                    keyframes.append(frame)
 
         else:
             break
