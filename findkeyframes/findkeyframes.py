@@ -2,7 +2,7 @@ import cStringIO, struct, sys
 
 TS_PACKET_SIZE = 188
 
-class MpegTsFile:
+class MpegTSFile:
     def __init__(self, filename):
         self.fd = open(filename, "rb")
 
@@ -104,7 +104,7 @@ class Frame:
         return str(self.pos) + ":" + str(self.duration)
 
 def get_keyframes(filename):
-    fd = MpegTsFile(filename)
+    fd = MpegTSFile(filename)
 
     fd.find_sync()
 
