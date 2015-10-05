@@ -42,17 +42,6 @@ class MpegTSFile:
                 self.fd.seek(pos - (pos % 188))
                 return self.read_packet()
 
-        # while True:
-        #     packet = self.read_packet()
-
-        #     if not packet:
-        #         return ""
-
-        #     if packet.find(substr) != -1:
-        #         return packet
-
-        # return ""
-
     def seek(self, pos, whence=0):
         return self.fd.seek(pos, whence)
 
@@ -156,12 +145,6 @@ def get_keyframes(filename):
                     if frame.is_keyframe:
                         last_keyframe = frame
                         keyframes.append(frame)
-
-                #if packet.pes_length:
-                #    fd.seek(packet.pes_length - (packet.pes_length %
-                #                                 TS_PACKET_SIZE), 1)
-
-
 
         else:
             break
